@@ -28,7 +28,7 @@ for sample in ${samples[@]}; do
        samtools sort - \
        > ${results}/bowtie/${run}/${sample}_${run}_${species}.bam
 
-       # Remove PCR duplicated
+       # Remove PCR duplicates
        samtools collate -@ 4 -O -u ${results}/bowtie/${run}/${sample}_${run}_${species}.bam |
        samtools fixmate -@ 4 -m -u - - |
        samtools sort -@ 4 -u - |
@@ -46,11 +46,6 @@ for sample in ${samples[@]}; do
        samtools mpileup ${results}/bowtie/${run}/${sample}_${run}_${species}_dedup.bam \
        --fasta-ref ${genome_dir}/${species}.fasta -a \
        > ${results}/bowtie/${run}/${sample}_${run}_${species}_mpileup.txt
-
-       #  Create consensus sequence
-       samtools consensus -f fasta -a \
-       ${results}/bowtie/${run}/${sample}_${run}_${species}_dedup.bam \
-       > ${results}/bowtie/${run}/${sample}_${run}_${species}_consensus.fasta
 
        # Calculate genome coverage
        samtools coverage ${results}/bowtie/${run}/${sample}_${run}_${species}_dedup.bam \
